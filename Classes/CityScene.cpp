@@ -24,6 +24,9 @@ bool  CityScene::init()
 
 	//在已有的地图上，创建玩家坦克
 	mPlayerTank[0] = Tank::createTankWithTankType("player2U.png", tileMapInfo);
+	//设置坦克类型为玩家坦克
+	mPlayerTank[0]->setObjType(PlayerTank);
+	mPlayerTank[0]->getBullet();
 
 	//放到地图中初始化位置
 	CCSize tileSize = tmxTileMap->getTileSize();

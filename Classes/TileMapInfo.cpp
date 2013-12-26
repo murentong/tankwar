@@ -34,8 +34,9 @@ bool TileMapInfo::collisionTest(CCRect rect)
 	CCSize mapSize = mTMXTileMap->getContentSize();
 	CCSize tileSize = mTMXTileMap->getTileSize();
 
-	if (rect.getMinX() < 0 || rect.getMaxX() >= mapSize.width ||
-		rect.getMinY() < 0 || rect.getMaxY() >= mapSize.height)
+	//超出地图外面直接返回
+	if (rect.getMinX() <= 0.1 || rect.getMaxX() >= mapSize.width ||
+		rect.getMinY() <= 0.1 || rect.getMaxY() >= mapSize.height)
 		return true;
 
 	//将坦克Y坐标转换为地图上的Y坐标

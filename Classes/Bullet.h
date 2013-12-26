@@ -22,6 +22,8 @@ private:
 	Tank* mTank;
 	TileMapInfo* mTileMapInfo;
 	float stepX, stepY;
+
+	CC_SYNTHESIZE(CCRect, mMovedRect, MovedRect);
 };
 
 #endif

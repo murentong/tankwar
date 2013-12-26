@@ -20,6 +20,9 @@ public:
 	void initEnemyAIWithTank(Tank* tank);
 	void update(float delta);
 
+	void collisionTest();
+	bool IsRectIntersect(CCRect rectA, CCRect rectB);
+
 private:
 	void addTank(float delta);
 	void tankAction(float delta);

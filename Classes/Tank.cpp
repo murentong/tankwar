@@ -1,7 +1,7 @@
 #include "Tank.h"
 #include "Bullet.h"
 
-Tank::Tank() :mBulletDelta(0.0)
+Tank::Tank() :mBulletDelta(0.0), IsBlock(false)
 {
 
 }
@@ -78,15 +78,26 @@ bool Tank::command(enumOrder order)
 	//根据运行方向旋转坦克
 	setRotation(fRotation);
 
-	//检测地图上的碰撞
 	CCRect rect = this->boundingBox();
-	if (!mTileMapInfo->collisionTest(CCRectMake(rect.getMinX() + stepX, 
-		rect.getMinY() + stepY, rect.size.width, rect.size.height)))
+	mMovedRect = CCRectMake(rect.getMinX() + stepX,
+		rect.getMinY() + stepY, rect.size.width, rect.size.height);
+	//检测地图上的碰撞
+	if (!mTileMapInfo->collisionTest(mMovedRect))
 	{
-		setPositionX(getPositionX() + stepX);
-		setPositionY(getPositionY() + stepY);
+		IsBlock = false;
 		return true;
 	}
+	//如果碰撞了就不要移动,设置为阻塞状态
+	mMovedRect = rect;
+	IsBlock = true;
 
 	return false;
+}
+
+void Tank::move()
+{
+	if (!IsBlock)
+	{
+		setPosition(ccp(mMovedRect.getMidX(), mMovedRect.getMidY()));
+	}
 }

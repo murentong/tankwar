@@ -75,16 +75,11 @@ void EnemyAI::tankAction(float delta)
 	{
 		Tank* tank = (Tank*)pObj;
 
-		//坦克自动移动，碰到墙壁自动换方向
+		//坦克按照上次的方向一直往前走
 		int Rotation = tank->getRotation();
-		if (!tank->command((enumOrder)(Rotation / 90 + 1)))
-		{
-			int n = (int)(CCRANDOM_0_1() * 5) % 5;
-			if (n != 0)
-				tank->command((enumOrder)n);
-		}
+		tank->command((enumOrder)(Rotation / 90 + 1));
 
-		//每隔一秒开一次火
+		//坦克每隔一秒开一次火
 		tank->setBulletDelta(tank->getBulletDelta() + delta);
 		if (tank->getBulletDelta() > 1)
 		{
@@ -94,5 +89,64 @@ void EnemyAI::tankAction(float delta)
 				tank->setBulletDelta(0.0);
 			}
 		}
+
+		//检测坦克之间的碰撞
+		collisionTest();
+
+		//如果坦克阻塞，换个方向
+		if (tank->getBlock())
+			tank->setRotation((int)(CCRANDOM_0_1() * 3.2) * 90);
+		//如果上面的判断完成后，坦克根据自己的阻塞状态移动
+		tank->move();
 	}
+	mTank->move();
+}
+
+void EnemyAI::collisionTest()
+{
+	//坦克和敌方坦克之间的碰撞检测
+	CCObject* pObj;
+	CCARRAY_FOREACH(mEnemyTanks, pObj)
+	{
+		Tank* enemyTank = (Tank*)pObj;
+		if (IsRectIntersect(mTank->getMovedRect(), enemyTank->getMovedRect()))
+		{
+			enemyTank->setBlock(true);
+			mTank->setBlock(true);
+		}
+	}
+
+	//敌方坦克之间的碰撞
+	CCArray* ccTmpArray = CCArray::create();
+	ccTmpArray->addObjectsFromArray(mEnemyTanks);
+	while (ccTmpArray->count())
+	{
+		CCObject* pObj;
+		Tank* tmpTank = (Tank*)ccTmpArray->lastObject();
+		ccTmpArray->removeLastObject();
+		CCARRAY_FOREACH(ccTmpArray, pObj)
+		{
+			if (IsRectIntersect(tmpTank->getMovedRect(), ((Tank*)pObj)->getMovedRect()))
+			{
+				tmpTank->setBlock(true);
+				((Tank*)pObj)->setBlock(true);
+				ccTmpArray->removeObject(pObj);
+			}
+		}
+	}
+}
+
+bool EnemyAI::IsRectIntersect(CCRect rectA, CCRect rectB)
+{
+	float left = max(rectA.getMinX(), rectB.getMinX());
+	float right = min(rectA.getMaxX(), rectB.getMaxX());
+	if (left > right)
+		return false;
+
+	float top = min(rectA.getMaxY(), rectB.getMaxY());
+	float bottom = max(rectA.getMinY(), rectB.getMinY());
+	if (top < bottom)
+		return false;
+
+	return true;
 }
