@@ -17,16 +17,21 @@ public :
 
 	static Tank* createTankWithTankType(const char* tankTypeName, TileMapInfo* tileMapInfo);
 	void initTankWithTankType(const char* tankTypeName, TileMapInfo* tileMapInfo);
+	void remove();
 	bool command(enumOrder order);
 	void move();
+
+	void setBlock(bool isBlock);
+	bool getBlock();
 	
 private:
+	bool mIsBlock;
+
 	CC_SYNTHESIZE(Bullet*, mBullet, Bullet);
 	CC_SYNTHESIZE(TileMapInfo*, mTileMapInfo, TileMapInfo);
 	CC_SYNTHESIZE(float, mBulletDelta, BulletDelta);
 	CC_SYNTHESIZE(enumObjectType, mObjType, ObjType);
 	CC_SYNTHESIZE(CCRect, mMovedRect, MovedRect);
-	CC_SYNTHESIZE(bool, IsBlock, Block);
 };
 
 #endif

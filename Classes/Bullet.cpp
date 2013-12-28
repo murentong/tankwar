@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet() :isFlying(false)
+Bullet::Bullet() :mFlyState(false)
 {
 }
 
@@ -24,15 +24,17 @@ void Bullet::initBulletWithTank(Tank* tank)
 	mTileMapInfo = mTank->getTileMapInfo();
 
 	initWithSpriteFrameName("bullet.png");
-	mTileMapInfo->getTileMap()->addChild(this);
+	setScale(1.5 / 3.0);
 	setVisible(false);
+	mTileMapInfo->getTileMap()->addChild(this);
+
 }
 
 bool Bullet::fire()
 {
-	if (!isFlying)
+	if (!mFlyState)
 	{
-		isFlying = true;
+		mFlyState = true;
 		setVisible(true);
 		setPosition(mTank->getPosition());
 		//设置子弹运行方向
@@ -55,9 +57,25 @@ bool Bullet::fire()
 			break;
 		}
 		scheduleUpdate();
+
+		return true;
 	}
 
-	return isFlying;
+	return false;
+}
+
+bool Bullet::stopFire()
+{
+	if (mFlyState == true)
+	{
+		mFlyState = false;
+		setVisible(false);
+		unscheduleUpdate();
+
+		return true;
+	}
+
+	return false;
 }
 
 void Bullet::bulletBoom()
@@ -97,16 +115,19 @@ void Bullet::bulletBoom()
 void Bullet::update(float delta)
 {
 	CCSprite::update(delta);
+
 	//设置移动后的位置
+	mMovedRect = boundingBox();
+	mMovedRect.origin.x += stepX;
+	mMovedRect.origin.y += stepY;
 	setPosition(ccp(getPositionX() + stepX, getPositionY() + stepY));
 
 	//检测是否有碰撞
 	CCRect rect = boundingBox();
 	if (mTileMapInfo->collisionTest(rect))
 	{
-		unscheduleUpdate();
-		setVisible(false);
-		isFlying = false;
+		//停止开火
+		stopFire();
 		//引爆子弹
 		bulletBoom();
 	}

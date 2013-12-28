@@ -1,4 +1,6 @@
 #include "CityScene.h"
+#include "SimpleAudioEngine.h"
+#include "CCFileUtils.h"
 
 CityScene::CityScene() :mRound(1)
 {
@@ -25,7 +27,7 @@ bool  CityScene::init()
 	//在已有的地图上，创建玩家坦克
 	mPlayerTank[0] = Tank::createTankWithTankType("player2U.png", tileMapInfo);
 	//设置坦克类型为玩家坦克
-	mPlayerTank[0]->setObjType(PlayerTank);
+	mPlayerTank[0]->setObjType(enumPlayerTank);
 	mPlayerTank[0]->getBullet();
 
 	//放到地图中初始化位置
@@ -83,6 +85,8 @@ void CityScene::onEnter()
 {
 	CCLayer::onEnter();
 	this->scheduleUpdate();
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(
+		CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
 }
 
 void CityScene::update(float delta)
@@ -90,7 +94,14 @@ void CityScene::update(float delta)
 	CCLayer::update(delta);
 	//将控制面板中的mLayerPanel获取的命令传给坦克
 	if (mPlayerTank[0] != NULL)
-		mPlayerTank[0]->command(mLayerPanel->getOrder());
+	{
+		if (mPlayerTank[0]->command(mLayerPanel->getOrder()) && mLayerPanel->getOrder() == cmdFire)
+		{
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
+				CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
+		}
+	}
+		
 
 	//调用敌人AI的update
 	mEnemyAI->update(delta);

@@ -14,16 +14,18 @@ public:
 	static Bullet* createBulletWithTank(Tank* tank);
 	void initBulletWithTank(Tank* tank);
 	bool fire();
+	bool stopFire();
 	virtual void update(float delta);
 	void bulletBoom();
 
 private:
-	bool isFlying;
 	Tank* mTank;
 	TileMapInfo* mTileMapInfo;
 	float stepX, stepY;
 
 	CC_SYNTHESIZE(CCRect, mMovedRect, MovedRect);
+	CC_SYNTHESIZE(bool, IsBlock, Block);
+	CC_SYNTHESIZE(bool, mFlyState, FlyState);
 };
 
 #endif

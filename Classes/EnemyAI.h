@@ -10,6 +10,14 @@ static const char* enemyTankType[] =
 	"normalU.png", "speedU.png", "armor1U.png"
 };
 
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
 class EnemyAI
 {
 public:
@@ -26,6 +34,7 @@ public:
 private:
 	void addTank(float delta);
 	void tankAction(float delta);
+	void move();
 
 private:
 	CCArray* mEnemyTanks;

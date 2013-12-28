@@ -5,8 +5,8 @@
 
 enum enumObjectType
 {
-	PlayerTank, EnemyTank, 
-	PlayerBullet, EnemyBullet
+	enumPlayerTank, enumEnemyTank, 
+	enumPlayerBullet, enumEnemyBullet
 };
 
 

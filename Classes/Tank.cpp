@@ -1,7 +1,7 @@
 #include "Tank.h"
 #include "Bullet.h"
 
-Tank::Tank() :mBulletDelta(0.0), IsBlock(false)
+Tank::Tank() :mBulletDelta(0.0), mIsBlock(false)
 {
 
 }
@@ -42,6 +42,11 @@ void Tank::initTankWithTankType(const char* tankTypeName, TileMapInfo* tileMapIn
 	mBullet = Bullet::createBulletWithTank(this);
 }
 
+void Tank::remove()
+{
+	mTileMapInfo->getTileMap()->removeChild(this);
+}
+
 bool Tank::command(enumOrder order)
 {
 	float stepX = 0.0f;
@@ -79,25 +84,35 @@ bool Tank::command(enumOrder order)
 	setRotation(fRotation);
 
 	CCRect rect = this->boundingBox();
-	mMovedRect = CCRectMake(rect.getMinX() + stepX,
-		rect.getMinY() + stepY, rect.size.width, rect.size.height);
+	mMovedRect.setRect(rect.getMinX() + stepX,rect.getMinY() + stepY, 
+		rect.size.width, rect.size.height);
 	//检测地图上的碰撞
 	if (!mTileMapInfo->collisionTest(mMovedRect))
 	{
-		IsBlock = false;
+		setBlock(false);
 		return true;
 	}
 	//如果碰撞了就不要移动,设置为阻塞状态
-	mMovedRect = rect;
-	IsBlock = true;
+	setBlock(true);
 
 	return false;
 }
 
 void Tank::move()
 {
-	if (!IsBlock)
+	setPosition(ccp(mMovedRect.getMidX(), mMovedRect.getMidY()));
+}
+
+void Tank::setBlock(bool isBlock)
+{
+	mIsBlock = isBlock;
+	if (mIsBlock == true)
 	{
-		setPosition(ccp(mMovedRect.getMidX(), mMovedRect.getMidY()));
+		mMovedRect = boundingBox();
 	}
+}
+
+bool Tank::getBlock()
+{
+	return mIsBlock;
 }
