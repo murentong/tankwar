@@ -1,6 +1,6 @@
 #include "CityScene.h"
 #include "SimpleAudioEngine.h"
-#include "CCFileUtils.h"
+//#include "CCFileUtils.h"
 
 CityScene::CityScene() :mRound(1)
 {
@@ -85,8 +85,8 @@ void CityScene::onEnter()
 {
 	CCLayer::onEnter();
 	this->scheduleUpdate();
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(
-		CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
+	//CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(
+	//	CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
 }
 
 void CityScene::update(float delta)
@@ -97,8 +97,8 @@ void CityScene::update(float delta)
 	{
 		if (mPlayerTank[0]->command(mLayerPanel->getOrder()) && mLayerPanel->getOrder() == cmdFire)
 		{
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
-				CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
+			//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
+			//	CCFileUtils::sharedFileUtils()->fullPathForFilename("sounds/shoot.wav").c_str());
 		}
 	}
 		

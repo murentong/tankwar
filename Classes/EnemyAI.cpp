@@ -163,7 +163,6 @@ void EnemyAI::collisionTest()
 			{
 				enemyBullet->stopFire();
 				playerBullet->stopFire();
-				break;
 			}
 		}
 	}
@@ -192,7 +191,7 @@ void EnemyAI::collisionTest()
 		{
 			if (IsRectIntersect(enemyBullet->getMovedRect(), mTank->getMovedRect()))
 			{
-				mTank->setVisible(false);
+				//mTank->setVisible(false);
 				enemyBullet->stopFire();
 				break;
 			}

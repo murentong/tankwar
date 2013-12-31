@@ -45,6 +45,7 @@ void Tank::initTankWithTankType(const char* tankTypeName, TileMapInfo* tileMapIn
 void Tank::remove()
 {
 	mTileMapInfo->getTileMap()->removeChild(this);
+	mTileMapInfo->getTileMap()->removeChild(mBullet);
 }
 
 bool Tank::command(enumOrder order)
